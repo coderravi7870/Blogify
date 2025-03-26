@@ -53,18 +53,18 @@ route.post("/", upload.single("coverImage"), async (req, res) => {
   const { title, body } = req.body;
 
   // Upload file to Cloudinary
-  // const result = await cloudinary.uploader.upload(req.file.path, {
-  //   folder: "blogify",
-  // });
+  const result = await cloudinary.uploader.upload(req.file.path, {
+    folder: "blogify",
+  });
 
   // Delete temporary file
-  // fs.unlinkSync(req.file.path);
+  fs.unlinkSync(req.file.path);
 
   const blog = await Blog.create({
     title,
     body,
     ceratedBy: req.user._id,
-    coverImageURL: "https://res.cloudinary.com/dizzs33g4/image/upload/v1742965185/blogify/bvkscppmbqujgndzppwr.png",
+    coverImageURL: result?.secure_url,
   });
 
   return res.redirect(`/blog/${blog._id}`);

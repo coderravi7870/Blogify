@@ -5,10 +5,8 @@ const Comment = require("../models/comments");
 
 const route = Router();
 
-const cloudinary = require("../cloudinaryConfig");
 const multer = require("multer");
 const path = require("path");
-const fs = require("fs");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -52,19 +50,14 @@ route.post("/comment/:blogId",async (req, res) => {
 route.post("/", upload.single("coverImage"), async (req, res) => {
   const { title, body } = req.body;
 
-  // Upload file to Cloudinary
-  const result = await cloudinary.uploader.upload(req.file.path, {
-    folder: "blogify",
-  });
-
-  // Delete temporary file
-  fs.unlinkSync(req.file.path);
+  console.log(req.file);
+  
 
   const blog = await Blog.create({
     title,
     body,
     ceratedBy: req.user._id,
-    coverImageURL: result?.secure_url,
+    coverImageURL: `/uploads/${req.file.filename}`,
   });
 
   return res.redirect(`/blog/${blog._id}`);

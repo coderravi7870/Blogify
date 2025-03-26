@@ -54,10 +54,6 @@ route.post("/comment/:blogId",async (req, res) => {
 
 route.post("/", upload.single("coverImage"), async (req, res) => {
   try {
-    if (!req.file) {
-      return res.status(400).send("File upload failed");
-    }
-
     const { title, body } = req.body;
     const blog = await Blog.create({
       title,

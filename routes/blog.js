@@ -65,7 +65,9 @@ route.post("/", upload.single("coverImage"), async (req, res) => {
     return res.redirect(`/blog/${blog._id}`);
   } catch (error) {
     console.error("Error creating blog:", error);
-    return res.status(500).send("Internal Server Error");
+    return res.render("404",{
+      user: req.user,
+    });
   }
 });
 

@@ -53,15 +53,24 @@ route.post("/comment/:blogId",async (req, res) => {
 })
 
 route.post("/", upload.single("coverImage"), async (req, res) => {
-  const { title, body } = req.body;
-  const blog = await Blog.create({
-    title,
-    body,
-    ceratedBy: req.user._id,
-    coverImageURL: req.file.path,
-  });
+  try {
+    if (!req.file) {
+      return res.status(400).send("File upload failed");
+    }
 
-  return res.redirect(`/blog/${blog._id}`);
+    const { title, body } = req.body;
+    const blog = await Blog.create({
+      title,
+      body,
+      createdBy: req.user._id,
+      coverImageURL: req.file.path,
+    });
+
+    return res.redirect(`/blog/${blog._id}`);
+  } catch (error) {
+    console.error("Error creating blog:", error);
+    return res.status(500).send("Internal Server Error");
+  }
 });
 
 

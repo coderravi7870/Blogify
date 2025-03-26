@@ -64,7 +64,7 @@ route.post("/", upload.single("coverImage"), async (req, res) => {
     title,
     body,
     ceratedBy: req.user._id,
-    coverImageURL: result.secure_url,
+    coverImageURL: result?.secure_url || "/images/default.png",
   });
 
   return res.redirect(`/blog/${blog._id}`);
